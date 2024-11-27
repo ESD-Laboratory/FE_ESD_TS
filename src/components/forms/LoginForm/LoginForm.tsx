@@ -2,7 +2,7 @@ import React, { useEffect, useReducer, useRef } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod"; // Make sure to import this
 import { Button } from "../../elements/Button/Button";
-import { useTypedDispatch, useTypedSelector } from "../../../store";
+import { useTypedDispatch } from "../../../store";
 import { loginSchema } from "./schema"; // Ensure your schema is defined properly
 import Input from "../../elements/Input/Input";
 import { LockClosedIcon } from "@heroicons/react/24/outline";
@@ -54,7 +54,7 @@ const LoginForm: React.FC = () => {
         navigate("/dashboard");
       }, 1000);
     },
-    onError: (err) => {
+    onError: () => {
       toast.error("Login failed");
     },
   });

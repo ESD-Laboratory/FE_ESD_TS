@@ -1,8 +1,10 @@
 import { z } from "zod";
 
-// Create the Zod schema based on the Achievement interface
+// Create the Zod schema based on the new attributes
 export const achievementSchema = z.object({
-  member_id: z.string().nonempty({ message: "Member ID is required" }),
-  achievement: z.string().nonempty({ message: "Achievement is required" }),
-  image: z.instanceof(File).optional(),
+  name: z.string().nonempty({ message: "Name is required" }),
+  detail: z.string().nonempty({ message: "Detail is required" }),
+  organizer: z.string().nonempty({ message: "Organizer is required" }),
+  image: z.string().nullable(),
+  date: z.string().nonempty({ message: "Date is required" }),
 });

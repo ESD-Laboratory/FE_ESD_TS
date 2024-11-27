@@ -11,16 +11,6 @@ interface Member {
   deletedAt?: Date | string;
 }
 
-interface Achievement {
-  id: string;
-  member_id: string;
-  achievement: string;
-  image?: string;
-  createdAt?: Date | string;
-  updatedAt?: Date | string;
-  deletedAt?: Date | string;
-}
-
 interface Product {
   id: string;
   product: string;
@@ -44,4 +34,16 @@ interface EventTypes {
   updatedAt?: Date | string;
   deletedAt?: Date | string;
 
+}
+
+interface Pagination {
+  page: number;
+  size: number,
+  totalData: number,
+  totalPage: number
+}
+
+interface BaseResponse {
+  message: string;
+  pagination: Pagination;
 }

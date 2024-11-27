@@ -7,7 +7,7 @@ import {
   ModalBox,
 } from "../../../../../components/elements/Modal/Modal";
 import ProductForm from "../../../../../components/forms/ProductForm";
-import { useAddProduct } from "../../../../../services/product/product.query";
+import { useAddProduct } from "../../../../Login/product/product.query";
 import toast from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";

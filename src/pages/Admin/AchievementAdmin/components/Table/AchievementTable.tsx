@@ -2,28 +2,37 @@ import React from "react";
 import { Button } from "../../../../../components/elements/Button/Button";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { openModal } from "../../../../../utils/modal";
+import { TAchievement } from "../../../../../services/achievement/achievement.query";
+import { useSearchParams } from "react-router-dom";
 
 interface AchievementTableProps {
-  achievements: Achievement[];
-  currentPage: number;
-  totalPages: number;
-  setCurrentPage: (page: number) => void;
-  setSelectedAchievement: (achievement: Achievement) => void;
+  achievements: TAchievement[];
+  setSelectedAchievement: (achievement: TAchievement) => void;
   setDeletedItem: React.Dispatch<
-    React.SetStateAction<{ id: string; achievement: string }>
+    React.SetStateAction<{ id: string; name: string }>
   >;
+  pagination: Pagination;
   isLoading: boolean;
 }
 
 const AchievementTable: React.FC<AchievementTableProps> = ({
   achievements,
-  currentPage,
-  totalPages,
-  setCurrentPage,
   setSelectedAchievement,
   setDeletedItem,
   isLoading,
+  pagination: { page, size, totalData, totalPage },
 }) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const handlePageChange = (newPageIndex: number) => {
+    console.log(page + ": " + newPageIndex);
+    console.log(page + newPageIndex);
+    setSearchParams({
+      ...Object.fromEntries(searchParams),
+      page: (page + newPageIndex).toString(),
+    });
+  };
+
   return (
     <div>
       <div className="overflow-x-auto">
@@ -32,6 +41,8 @@ const AchievementTable: React.FC<AchievementTableProps> = ({
             <tr>
               <th>Member ID</th>
               <th>Achievement</th>
+              <th>Organizer</th>
+              <th>Tanggal</th>
               <th>Image</th>
               <th>Actions</th>
             </tr>
@@ -44,19 +55,25 @@ const AchievementTable: React.FC<AchievementTableProps> = ({
                 </td>
               </tr>
             ) : null}
+            {!isLoading && achievements.length === 0 ? (
+              <tr>
+                <td colSpan={4} className="text-center">
+                  No data found
+                </td>
+              </tr>
+            ) : null}
 
-            {achievements?.map((achievement: Achievement) => (
+            {achievements?.map((achievement: TAchievement) => (
               <tr key={achievement.id}>
-                <td>{achievement.member_id}</td>
-                <td>{achievement.achievement}</td>
+                <td>{achievement.id}</td>
+                <td>{achievement.name}</td>
+                <td>{achievement.organizer}</td>
+                <td>{achievement.date}</td>
                 <td>
                   {achievement.image ? (
                     <div className="avatar">
                       <div className="mask mask-squircle h-12 w-12">
-                        <img
-                          src={achievement.image}
-                          alt={achievement.achievement}
-                        />
+                        <img src={achievement.image} alt={achievement.name} />
                       </div>
                     </div>
                   ) : (
@@ -67,7 +84,7 @@ const AchievementTable: React.FC<AchievementTableProps> = ({
                   <div className="flex space-x-2">
                     <Button
                       onClick={() => {
-                        setSelectedAchievement?.(achievement);
+                        setSelectedAchievement(achievement);
                         openModal("edit-achievement-dialog");
                       }}
                     >
@@ -77,8 +94,8 @@ const AchievementTable: React.FC<AchievementTableProps> = ({
                       variant="danger"
                       onClick={() => {
                         setDeletedItem?.({
-                          id: achievement.id,
-                          achievement: achievement.achievement,
+                          id: achievement.id!,
+                          name: achievement.name,
                         });
                         openModal("modal-delete");
                       }}
@@ -97,18 +114,18 @@ const AchievementTable: React.FC<AchievementTableProps> = ({
       <div className="mt-4 flex justify-between">
         <button
           className="btn btn-sm"
-          onClick={() => setCurrentPage(Math.max(currentPage - 1, 1))}
-          disabled={currentPage === 1}
+          disabled={page === 1}
+          onClick={() => handlePageChange(-1)}
         >
           Previous
         </button>
         <span>
-          Page {currentPage} of {totalPages}
+          Page {page} of {totalPage}
         </span>
         <button
           className="btn btn-sm"
-          onClick={() => setCurrentPage(Math.min(currentPage + 1, totalPages))}
-          disabled={currentPage === totalPages}
+          disabled={page === totalPage}
+          onClick={() => handlePageChange(1)}
         >
           Next
         </button>

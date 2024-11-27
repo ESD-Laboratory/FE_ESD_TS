@@ -1,46 +1,41 @@
-import { formatDateType } from '../../../utils/string';
-import Paragraph from '../../elements/Paragraph/Paragraph';
-import SectionHeading from '../SectionHeading';
+import { TAchievement } from "../../../services/achievement/achievement.query";
+import { convertDateString } from "../../../utils/string";
+import Paragraph from "../../elements/Paragraph/Paragraph";
+import SectionHeading from "../SectionHeading";
 
 interface AchievementItemProps {
-  achievement: {
-    name: string;
-    description: string;
-    collaborators: string;
-    image: string;
-    link: string;
-    date: Date;
-  };
+  achievement: TAchievement;
 }
 
 const AchievementItem = ({ achievement }: AchievementItemProps) => {
-  const { name, description, collaborators, date } = achievement;
+  const { name, detail, organizer, date, image } = achievement;
 
   return (
-    <div className='space-y-[32px] w-full flex flex-col items-center '>
-      <div className={`flex justify-center w-full h-[379px]`} id='Logo_Win'>
-        <img src={'./Winner.png'} className='' alt='' />
+    <div className="flex w-full  items-center gap-6 space-y-[32px] rounded-md border border-gray-300">
+      <div
+        className={`relative flex h-[379px] w-full max-w-96 justify-center bg-gray-100`}
+        id="Logo_Win"
+      >
+        <img
+          src={image}
+          className="object  object-cover object-center"
+          alt=""
+        />
       </div>
-      <div className='section w-[1096px] flex justify-center gap-16'>
-        <div className='flex flex-col items-end gap-[34px]'>
-          <div className='flex w-[945px] items-start gap-[16px]'>
-            <div className='flex flex-col w-[711px] items-start gap-2'>
-              <SectionHeading>
-                <div className='grid place-items-start'>
-                  <SectionHeading.HeadingTop>
-                    {formatDateType(date)}
-                  </SectionHeading.HeadingTop>
-                  <SectionHeading.HeadingBottom className='text-[20px]'>
-                    {name}
-                  </SectionHeading.HeadingBottom>
-                  <p className='text-[--gray-500]'>{collaborators}</p>
-                </div>
-              </SectionHeading>
-              <Paragraph className='text-secondaryDark'>
-                {description}
-              </Paragraph>
+      <div className="section flex justify-center  gap-16">
+        <div className="flex w-full flex-col items-start gap-2">
+          <SectionHeading>
+            <div className="grid place-items-start">
+              <SectionHeading.HeadingTop>
+                {convertDateString(date)}
+              </SectionHeading.HeadingTop>
+              <SectionHeading.HeadingBottom className="text-[20px]">
+                {name}
+              </SectionHeading.HeadingBottom>
+              <p className="text-[--gray-500]">{organizer}</p>
             </div>
-          </div>
+          </SectionHeading>
+          <Paragraph className="text-secondaryDark">{detail}</Paragraph>
         </div>
       </div>
     </div>

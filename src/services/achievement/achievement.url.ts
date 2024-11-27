@@ -1,7 +1,8 @@
 import { AxiosResponse } from "axios";
 import axiosInstance from "../axiosInstance";  // Assuming you're using axiosInstance
+import { Params } from "./achievement.query";
 
-function getAllAchievements(params?: Achievement[]): Promise<AxiosResponse> {
+function getAllAchievements(params: Params): Promise<AxiosResponse> {
   return axiosInstance.get('/achievements', { params });
 }
 

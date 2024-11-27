@@ -1,5 +1,5 @@
 import { AxiosResponse } from "axios";
-import axiosInstance from "../axiosInstance";  // Assuming you're using axiosInstance
+import axiosInstance from "../../../services/axiosInstance";  // Assuming you're using axiosInstance
 
 function getProducts(params?: { on_development: boolean }): Promise<AxiosResponse> {
   return axiosInstance.get('/product', { params });

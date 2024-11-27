@@ -6,6 +6,8 @@ import {
   TdesignMember,
 } from "../../elements/Icon/Icon";
 import LogoNameEsd from "../../ui/LogoEsd/LogoNameESD";
+import { useTypedDispatch } from "../../../store";
+import { removeUser } from "../../../store/user";
 
 type Router = {
   path: string;
@@ -39,6 +41,13 @@ const menuItemLinks: Router[] = [
 
 const Sidebar = () => {
   const { pathname } = useLocation();
+  const dispatch = useTypedDispatch();
+
+  const handleLogout = () => {
+    localStorage.clear();
+    window.location.reload();
+    dispatch(removeUser);
+  };
 
   return (
     <div className="drawer lg:drawer-open">
@@ -76,6 +85,12 @@ const Sidebar = () => {
               </li>
             </Link>
           ))}
+          <li
+            className="cursor-pointer px-4 text-red-600"
+            onClick={handleLogout}
+          >
+            Logout
+          </li>
         </ul>
       </div>
     </div>

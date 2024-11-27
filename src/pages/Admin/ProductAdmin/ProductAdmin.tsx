@@ -2,7 +2,7 @@ import React, { useState, useMemo } from "react";
 import {
   useDeleteProduct,
   useGetProducts,
-} from "../../../services/product/product.query";
+} from "../../Login/product/product.query";
 import ProductTable from "./components/Table/ProductTable";
 import Card from "../../../components/elements/Card/Card";
 import { Button } from "../../../components/elements/Button/Button";

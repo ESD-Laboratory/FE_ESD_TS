@@ -8,13 +8,22 @@ import {
 } from "../../../../../components/elements/Modal/Modal";
 import toast from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { achievementSchema } from "../../../../../components/forms/AchievementForm/schema";
 import { useUpdateAchievementData } from "../../../../../services/achievement/achievement.query";
 import AchievementForm from "../../../../../components/forms/AchievementForm/AchievementForm";
 
+export interface TAchievementEdit {
+  id?: string;
+  name: string;
+  detail: string;
+  organizer: string;
+  image: string;
+  date: string;
+}
+
 interface DialogEditAchievementProps {
-  selectedAchievement: Achievement;
+  selectedAchievement: TAchievementEdit;
   onClose: () => void;
 }
 
@@ -28,12 +37,18 @@ const DialogEditAchievement: React.FC<DialogEditAchievementProps> = ({
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting },
     reset,
-  } = useForm<Achievement>({
+  } = useForm<TAchievementEdit>({
     resolver: zodResolver(achievementSchema),
     defaultValues: selectedAchievement, // Populate form with selectedAchievement data
   });
+
+  useEffect(() => {
+    reset(selectedAchievement);
+    setValue("image", selectedAchievement.image);
+  }, [selectedAchievement, reset, setValue]);
 
   const { mutate: updateAchievement, isPending } = useUpdateAchievementData({
     onSuccess: () => {
@@ -50,12 +65,16 @@ const DialogEditAchievement: React.FC<DialogEditAchievementProps> = ({
     },
   });
 
-  const onSubmit: SubmitHandler<Achievement> = (data) => {
+  console.log(selectedAchievement);
+
+  const onSubmit: SubmitHandler<TAchievementEdit> = (data) => {
     const formData = new FormData();
 
     // Append each field to the FormData object
-    formData.append("member_id", data.member_id);
-    formData.append("achievement", data.achievement);
+    formData.append("name", data.name);
+    formData.append("detail", data.detail);
+    formData.append("organizer", data.organizer);
+    formData.append("date", data.date);
 
     // Append the image if it exists
     if (image) {
@@ -64,7 +83,7 @@ const DialogEditAchievement: React.FC<DialogEditAchievementProps> = ({
 
     // Call the mutation with formData to update the achievement
     updateAchievement({
-      id: selectedAchievement.id,
+      id: selectedAchievement.id!,
       data: formData,
     });
   };

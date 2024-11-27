@@ -11,7 +11,7 @@ import toast from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { productSchema } from "../../../../../components/forms/ProductForm/schema";
-import { useUpdateProductData } from "../../../../../services/product/product.query";
+import { useUpdateProductData } from "../../../../Login/product/product.query";
 
 interface DialogEditProductProps {
   selectedProduct: Product;

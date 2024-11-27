@@ -1,19 +1,13 @@
-import SectionHeading from '../SectionHeading';
-import AchievementItem from './AchievementItem';
+import { TAchievement } from "../../../services/achievement/achievement.query";
+import SectionHeading from "../SectionHeading";
+import AchievementItem from "./AchievementItem";
 
 interface AchievementListsProps {
-  achievements: {
-    name: string;
-    description: string;
-    collaborators: string;
-    image: string;
-    link: string;
-    date: Date;
-  }[];
+  achievements: TAchievement[];
 }
 const AchievementLists = ({ achievements }: AchievementListsProps) => {
   return (
-    <div className='flex flex-col items-center gap-[32px] md:gap-[64px]'>
+    <div className="flex flex-col items-center gap-[32px] md:gap-[64px]">
       <SectionHeading>
         <div>
           <SectionHeading.HeadingTop>
@@ -24,9 +18,11 @@ const AchievementLists = ({ achievements }: AchievementListsProps) => {
           </SectionHeading.HeadingBottom>
         </div>
       </SectionHeading>
-      {achievements.map((achievement) => (
-        <AchievementItem key={achievement.name} achievement={achievement} />
-      ))}
+      <div className="container-layout mx-auto grid grid-cols-1">
+        {achievements?.map((achievement) => (
+          <AchievementItem key={achievement.id} achievement={achievement} />
+        ))}
+      </div>
     </div>
   );
 };

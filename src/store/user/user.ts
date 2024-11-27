@@ -31,7 +31,12 @@ export const userSlice = createSlice({
       state.user = payload
     },
     removeUser: (state) => {
-      state.user = initialState.user
+      state.user = {
+        id: '',
+        email: '',
+        name: '',
+        token: '',
+      }
     }
   }
 })

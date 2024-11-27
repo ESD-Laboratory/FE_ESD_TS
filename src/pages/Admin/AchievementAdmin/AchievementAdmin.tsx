@@ -1,5 +1,6 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import {
+  TAchievement,
   useDeleteAchievement,
   useGetAllAchievements,
 } from "../../../services/achievement/achievement.query";
@@ -12,14 +13,24 @@ import { toast } from "react-hot-toast";
 import DialogAddAchievement from "./components/DialogAdd/DialogAddAchievement";
 import DialogEditAchievement from "./components/DialogEdit/DialogEditAchievement";
 import AchievementTable from "./components/Table/AchievementTable";
+import { useSearchParams } from "react-router-dom";
 
 const AchievementAdmin: React.FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const queryClient = useQueryClient();
-  const [selectedAchievement, setSelectedAchievement] = useState<Achievement>();
+  const [selectedAchievement, setSelectedAchievement] =
+    useState<TAchievement>();
   const [deletedItem, setDeletedItem] = useState<{ id: string; name: string }>({
     id: "",
     name: "",
   });
+
+  const params = {
+    page: parseInt(searchParams.get("page") || "1", 10),
+    size: parseInt(searchParams.get("size") || "10", 10),
+  };
+
+  console.log(parseInt(searchParams.get("page") || "1", 1));
 
   const { id: deletedId, name: deletedName } = deletedItem;
 
@@ -27,7 +38,8 @@ const AchievementAdmin: React.FC = () => {
     data: achievementData,
     isFetching,
     // isError,
-  } = useGetAllAchievements();
+  } = useGetAllAchievements(params);
+
   const { mutate: deleteAchievement, isPending: pendingDelete } =
     useDeleteAchievement({
       onSuccess: () => {
@@ -42,24 +54,20 @@ const AchievementAdmin: React.FC = () => {
       },
     });
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 5;
-
-  const totalPages = Array.isArray(achievementData)
-    ? Math.ceil(achievementData.length / pageSize)
-    : 1;
-
-  const tableData = useMemo(() => {
-    if (Array.isArray(achievementData)) {
-      return achievementData.slice(
-        (currentPage - 1) * pageSize,
-        currentPage * pageSize,
-      );
-    }
-    return [];
-  }, [achievementData, currentPage]);
-
   // if (isError) return <div>Error loading data.</div>;
+
+  useEffect(() => {
+    if (achievementData?.pagination) {
+      const { page, size, totalPage, totalData } = achievementData.pagination;
+      setSearchParams({
+        page: page.toString(),
+        size: size.toString(),
+        totalPage: totalPage.toString(),
+        totalData: totalData.toString(),
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [achievementData]);
 
   return (
     <>
@@ -75,13 +83,18 @@ const AchievementAdmin: React.FC = () => {
           </Button>
         </div>
         <AchievementTable
-          achievements={tableData}
-          currentPage={currentPage}
-          totalPages={totalPages}
+          achievements={achievementData?.data || []}
           setSelectedAchievement={setSelectedAchievement}
           setDeletedItem={setDeletedItem}
-          setCurrentPage={setCurrentPage}
           isLoading={isFetching} // Pass loading state to table
+          pagination={
+            achievementData?.pagination || {
+              page: 1,
+              size: 10,
+              totalData: 0,
+              totalPage: 1,
+            }
+          }
         />
       </Card>
 

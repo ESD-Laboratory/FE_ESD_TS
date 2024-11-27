@@ -13,6 +13,14 @@ import { useState } from "react";
 import { achievementSchema } from "../../../../../components/forms/AchievementForm/schema";
 import AchievementForm from "../../../../../components/forms/AchievementForm/AchievementForm";
 
+export interface TAchievement {
+  name: string;
+  detail: string;
+  organizer: string;
+  image: string;
+  date: string;
+}
+
 interface DialogAddAchievementProps {
   onClose: () => void;
 }
@@ -26,14 +34,17 @@ const DialogAddAchievement: React.FC<DialogAddAchievementProps> = ({
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting },
     reset,
-  } = useForm<Achievement>({
+  } = useForm<TAchievement>({
     resolver: zodResolver(achievementSchema),
     defaultValues: {
-      member_id: "",
-      achievement: "",
-      image: "", // Initial empty values for achievement
+      name: "",
+      detail: "",
+      organizer: "",
+      image: "",
+      date: "",
     },
   });
 
@@ -52,12 +63,13 @@ const DialogAddAchievement: React.FC<DialogAddAchievementProps> = ({
     },
   });
 
-  const onSubmit: SubmitHandler<Achievement> = (data) => {
+  const onSubmit: SubmitHandler<TAchievement> = (data) => {
     const formData = new FormData();
 
-    // Append each field to the FormData object
-    formData.append("member_id", data.member_id);
-    formData.append("achievement", data.achievement);
+    formData.append("name", data.name);
+    formData.append("detail", data.detail);
+    formData.append("organizer", data.organizer);
+    formData.append("date", data.date);
 
     // Append the image if it exists
     if (image) {
@@ -71,7 +83,13 @@ const DialogAddAchievement: React.FC<DialogAddAchievementProps> = ({
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        // Check if file size is more than 5MB
+        toast.error("File size should not exceed 5MB");
+        return;
+      }
       setImage(file);
+      setValue("image", file.name);
     }
   };
 

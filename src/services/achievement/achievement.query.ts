@@ -2,11 +2,33 @@ import { useQuery, useMutation, UseMutationOptions } from '@tanstack/react-query
 import { AxiosResponse } from 'axios';
 import AchievementService from './achievement.url';
 
+export interface Params {
+  page: number;
+  size: number;
+}
+
+export interface TAchievement {
+  id?: string;
+  name: string;
+  detail: string;
+  organizer: string;
+  image: string;
+  date: string;
+}
+
+interface AchievementResponse extends BaseResponse {
+  data: TAchievement[]
+}
+
 // Query for GET all achievements
-export const useGetAllAchievements = (params?: Achievement[]) => {
-  return useQuery({
+export const useGetAllAchievements = (params: Params) => {
+  console.log(params)
+  return useQuery<AchievementResponse>({
     queryKey: ['achievements', params],
-    queryFn: async () => AchievementService.getAllAchievements(params),
+    queryFn: async () => {
+      const response = await AchievementService.getAllAchievements(params);
+      return response.data;
+    },
   });
 };
 
