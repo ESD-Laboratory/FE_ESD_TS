@@ -20,7 +20,7 @@ export const useGetAllEvents = (params?: Event[]) => {
 
     queryFn: async () => {
       const response = await EventService.getAllEvents(params);
-      return response.data.data;
+      return response.data;
     },
   });
 };

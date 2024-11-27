@@ -80,14 +80,14 @@ const EventItem = ({ event, onClick }: EventItemProps) => {
               </Link>
             </button>
           </div>
-          <div id='Button-quote' className='flex gap-[16px]'>
-            <ButtonGroup>
-              <Button variant='secondary' onClick={handleNextClick}>
-                Previous
-              </Button>
-              <Button onClick={handlePrevious}>Next</Button>
-            </ButtonGroup>
-          </div>
+          {/* <div id='Button-quote' className='flex gap-[16px]'> */}
+          {/*   <ButtonGroup> */}
+          {/*     <Button variant='secondary' onClick={handleNextClick}> */}
+          {/*       Previous */}
+          {/*     </Button> */}
+          {/*     <Button onClick={handlePrevious}>Next</Button> */}
+          {/*   </ButtonGroup> */}
+          {/* </div> */}
         </div>
       </div>
     </div>

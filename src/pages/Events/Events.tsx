@@ -1,4 +1,3 @@
-import React from 'react'
 import HeadingBanner from '../../components/ui/HeadingBanner/HeadingBanner';
 import EventView from '../../components/ui/EventsSection/EventList';
 import { useGetAllEvents } from '../../services/event/event.query';
@@ -6,8 +5,10 @@ import { useGetAllEvents } from '../../services/event/event.query';
 const Events = () => {
 
 
-  const {data: eventData, isFetching, isError} = useGetAllEvents();
-  console.log(eventData)
+  const {data: eventData, isFetching, isError} = useGetAllEvents({
+    page: 1,
+    size: 10
+  });
 
   return (
     <div className='container-layout'>
@@ -41,12 +42,12 @@ const Events = () => {
         <div className="flex justify-center items-center min-h-[200px]">
           <p className="text-lg text-red-500">Error loading events. Please try again later.</p>
         </div>
-      ) : !eventData || eventData.length === 0 ? (
+      ) : !eventData.data || eventData.data.length === 0 ? (
         <div className="flex justify-center items-center min-h-[200px]">
           <p className="text-lg">No events available at the moment.</p>
         </div>
       ) : (
-        <EventView events={eventData} />
+        <EventView events={eventData.data} />
       )}
     </div>
 

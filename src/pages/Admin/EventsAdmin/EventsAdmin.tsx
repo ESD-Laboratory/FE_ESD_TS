@@ -20,9 +20,6 @@ const EventsAdmin: React.FC = () => {
 
   const { id: deletedId, name: deletedName } = deletedItem;
 
-  const {data: eventData, isFetching, isError} = useGetAllEvents();
-  console.log(eventData);
-
   const { mutate: deleteEvent , isPending: pendingDelete } = useDeleteEvent({
     onSuccess: () => {
       setDeletedItem({ id: "", name: "" });
@@ -39,21 +36,18 @@ const EventsAdmin: React.FC = () => {
   })
 
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 5;
+  const pageSize = 10;
 
-  const totalPages = Array.isArray(eventData)
-    ? Math.ceil(eventData.length / pageSize)
-    : 1;
+  const {data: eventData, isFetching, isError} = useGetAllEvents({
+    page: currentPage,
+    size: pageSize
+  });
 
-  const tableData = useMemo(() => {
-    if (Array.isArray(eventData)) {
-      return eventData.slice(
-        (currentPage - 1) * pageSize,
-        currentPage * pageSize,
-      );
-    }
-    return [];
-  }, [eventData, currentPage]);
+  // Assuming the API returns both data and metadata
+  const tableData = eventData?.data || [];
+  const totalPages = eventData?.pagination.totalPage || 1;
+
+  console.log(eventData);
 
   if (isError) return <div>Error loading data.</div>;
 
